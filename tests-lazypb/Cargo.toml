@@ -1,0 +1,25 @@
+[package]
+name = "tests-lazypb"
+version = "0.1.0"
+edition = "2018"
+publish = false
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+bytes = "1"
+cfg-if = "1"
+prost = { path = ".." }
+prost-types = { path = "../prost-types" }
+protobuf = { path = "../protobuf" }
+
+[dev-dependencies]
+diff = "0.1"
+prost-build = { path = "../prost-build" }
+tempfile = "3"
+
+[build-dependencies]
+cfg-if = "1"
+env_logger = { version = "0.8", default-features = false }
+prost-build = { path = "../prost-build" }
+protobuf = { path = "../protobuf" }
