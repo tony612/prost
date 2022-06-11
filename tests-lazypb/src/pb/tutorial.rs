@@ -11,7 +11,7 @@ pub struct Person {
     #[prost(message, repeated, tag="4")]
     pub phones: ::prost::alloc::vec::Vec<person::PhoneNumber>,
     #[prost(message, optional, tag="5")]
-    pub last_updated: ::core::option::Option<::prost_types::Timestamp>,
+    pub last_updated: ::core::option::Option<::core::cell::RefCell<::lazypb::Lazy<::prost_types::Timestamp>>>,
 }
 /// Nested message and enum types in `Person`.
 pub mod person {

@@ -11,7 +11,7 @@ bytes = "1"
 cfg-if = "1"
 prost = { path = ".." }
 prost-types = { path = "../prost-types" }
-protobuf = { path = "../protobuf" }
+lazypb = { path = "../lazypb" }
 
 [dev-dependencies]
 diff = "0.1"
@@ -21,5 +21,4 @@ tempfile = "3"
 [build-dependencies]
 cfg-if = "1"
 env_logger = { version = "0.8", default-features = false }
-prost-build = { path = "../prost-build" }
-protobuf = { path = "../protobuf" }
+prost-build = { path = "../prost-build", features = ["lazypb"] }

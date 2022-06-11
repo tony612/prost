@@ -12,8 +12,7 @@ use crate::encoding::{
 use crate::DecodeError;
 use crate::EncodeError;
 
-/// A Protocol Buffers message.
-pub trait Message: Debug + Send + Sync {
+pub trait Message: Debug {
     /// Encodes the message to a buffer.
     ///
     /// This method will panic if the buffer has insufficient capacity.

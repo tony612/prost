@@ -15,6 +15,7 @@ edition = "2018"
 [features]
 default = []
 vendored = []
+lazypb = ["prost/lazypb"]
 
 [dependencies]
 bytes = { version = "1", default-features = false }

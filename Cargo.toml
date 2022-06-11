@@ -47,10 +47,12 @@ bench = false
 default = ["prost-derive", "std"]
 no-recursion-limit = []
 std = []
+lazypb = ["dep:lazypb"]
 
 [dependencies]
 bytes = { version = "1", default-features = false }
 prost-derive = { version = "0.10.0", path = "prost-derive", optional = true }
+lazypb = { path = "lazypb", optional = true }
 
 [dev-dependencies]
 criterion = "0.3"

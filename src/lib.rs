@@ -91,3 +91,6 @@ extern crate prost_derive;
 #[cfg(feature = "prost-derive")]
 #[doc(hidden)]
 pub use prost_derive::*;
+
+#[cfg(feature = "prost-derive")]
+mod lazypb;

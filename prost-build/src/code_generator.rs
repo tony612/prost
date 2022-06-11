@@ -394,12 +394,21 @@ impl<'a> CodeGenerator<'a> {
         } else if optional {
             self.buf.push_str("::core::option::Option<");
         }
+
+        #[cfg(feature = "lazypb")]
+        if type_ == Type::Message && !repeated {
+            self.buf.push_str("::core::cell::RefCell<::lazypb::Lazy<");
+        }
         if boxed {
             self.buf.push_str("::prost::alloc::boxed::Box<");
         }
         self.buf.push_str(&ty);
         if boxed {
             self.buf.push('>');
+        }
+        #[cfg(feature = "lazypb")]
+        if type_ == Type::Message && !repeated {
+            self.buf.push_str(">>");
         }
         if repeated || optional {
             self.buf.push('>');

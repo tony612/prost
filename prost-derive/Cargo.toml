@@ -12,6 +12,9 @@ readme = "README.md"
 description = "A Protocol Buffers implementation for the Rust Language."
 edition = "2018"
 
+[features]
+lazypb = []
+
 [lib]
 proc_macro = true
 

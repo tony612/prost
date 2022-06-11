@@ -1,7 +1,14 @@
 use bytes::Bytes;
 
-#[derive(Debug)]
-pub enum Lazy<T> {
+#[derive(Debug, PartialEq, Clone)]
+pub enum Lazy<M> {
+    Init,
     Pending(Bytes),
-    Ready(T),
+    Ready(M),
+}
+
+impl<M> Default for Lazy<M> {
+    fn default() -> Self {
+        return Lazy::Init;
+    }
 }
