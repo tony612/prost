@@ -9,6 +9,7 @@ use crate::field::{set_bool, set_option, tag_attr, word_attr, Label};
 pub struct Field {
     pub label: Label,
     pub tag: u32,
+    pub lazypb: bool,
 }
 
 impl Field {
@@ -17,6 +18,8 @@ impl Field {
         let mut label = None;
         let mut tag = None;
         let mut boxed = false;
+        #[allow(unused_mut)]
+        let mut lazypb = false;
 
         let mut unknown_attrs = Vec::new();
 
@@ -25,6 +28,9 @@ impl Field {
                 set_bool(&mut message, "duplicate message attribute")?;
             } else if word_attr("boxed", attr) {
                 set_bool(&mut boxed, "duplicate boxed attribute")?;
+            } else if word_attr("lazypb", attr) {
+                #[cfg(feature = "lazypb")]
+                set_bool(&mut lazypb, "duplicate lazypb attribute")?;
             } else if let Some(t) = tag_attr(attr)? {
                 set_option(&mut tag, t, "duplicate tag attributes")?;
             } else if let Some(l) = Label::from_attr(attr) {
@@ -55,6 +61,7 @@ impl Field {
         Ok(Some(Field {
             label: label.unwrap_or(Label::Optional),
             tag,
+            lazypb,
         }))
     }
 
@@ -94,12 +101,31 @@ impl Field {
 
     pub fn merge(&self, ident: TokenStream) -> TokenStream {
         match self.label {
-            Label::Optional => quote! {
-                ::prost::encoding::message::merge(wire_type,
-                                                 #ident.get_or_insert_with(::core::default::Default::default),
-                                                 buf,
-                                                 ctx)
-            },
+            Label::Optional => {
+                #[cfg(feature = "lazypb")]
+                if self.lazypb {
+                    quote! {
+                        ::prost::lazypb::message::merge(wire_type,
+                                                         #ident.get_or_insert_with(::core::default::Default::default),
+                                                         buf,
+                                                         ctx)
+                    }
+                } else {
+                    quote! {
+                        ::prost::encoding::message::merge(wire_type,
+                                                         #ident.get_or_insert_with(::core::default::Default::default),
+                                                         buf,
+                                                         ctx)
+                    }
+                }
+                #[cfg(not(feature = "lazypb"))]
+                quote! {
+                    ::prost::encoding::message::merge(wire_type,
+                                                     #ident.get_or_insert_with(::core::default::Default::default),
+                                                     buf,
+                                                     ctx)
+                }
+            }
             Label::Required => quote! {
                 ::prost::encoding::message::merge(wire_type, #ident, buf, ctx)
             },

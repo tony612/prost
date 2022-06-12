@@ -344,6 +344,10 @@ impl<'a> CodeGenerator<'a> {
                 }
             }
         }
+        #[cfg(feature = "lazypb")]
+        if type_ == Type::Message && !repeated {
+            self.buf.push_str(", lazypb");
+        }
 
         if boxed {
             self.buf.push_str(", boxed");
