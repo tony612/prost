@@ -168,6 +168,7 @@ impl Field {
         match *self {
             Field::Scalar(ref scalar) => scalar.methods(ident),
             Field::Map(ref map) => map.methods(ident),
+            Field::Message(ref msg) => msg.methods(ident),
             _ => None,
         }
     }

@@ -10,7 +10,7 @@ pub struct Person {
     pub email: ::prost::alloc::string::String,
     #[prost(message, repeated, tag="4")]
     pub phones: ::prost::alloc::vec::Vec<person::PhoneNumber>,
-    #[prost(message, optional, lazypb, tag="5")]
+    #[prost(message, optional, lazypb="::prost_types::Timestamp", tag="5")]
     pub last_updated: ::core::option::Option<::core::cell::RefCell<::lazypb::Lazy<::prost_types::Timestamp>>>,
 }
 /// Nested message and enum types in `Person`.

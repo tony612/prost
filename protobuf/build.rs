@@ -52,7 +52,7 @@ fn main() -> Result<()> {
         let src_dir = &download_protobuf(tempdir.path())?;
         let prefix_dir = &src_dir.join("prefix");
         fs::create_dir(prefix_dir).expect("failed to create prefix directory");
-        install_conformance_test_runner(src_dir, prefix_dir)?;
+        // install_conformance_test_runner(src_dir, prefix_dir)?;
         install_protos(src_dir, prefix_dir)?;
         install_datasets(src_dir, prefix_dir)?;
         fs::rename(prefix_dir, protobuf_dir).context("failed to move protobuf dir")?;

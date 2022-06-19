@@ -282,6 +282,25 @@ impl<'a> CodeGenerator<'a> {
         }
     }
 
+    fn is_builtin_type(&self, field: &FieldDescriptorProto) -> bool {
+        match self.extern_paths.resolve_ident(field.type_name()) {
+            Some(p) => match p.as_ref() {
+                "bool"
+                | "::prost::alloc::vec::Vec<u8>"
+                | "f64"
+                | "()"
+                | "f32"
+                | "i32"
+                | "i64"
+                | "::prost::alloc::string::String"
+                | "u32"
+                | "u64" => true,
+                _ => false,
+            },
+            None => false,
+        }
+    }
+
     fn append_field(&mut self, fq_message_name: &str, field: FieldDescriptorProto) {
         let type_ = field.r#type();
         let repeated = field.label == Some(Label::Repeated as i32);
@@ -345,8 +364,13 @@ impl<'a> CodeGenerator<'a> {
             }
         }
         #[cfg(feature = "lazypb")]
-        if type_ == Type::Message && !repeated {
-            self.buf.push_str(", lazypb");
+        let is_lazy =
+            type_ == Type::Message && !repeated && !boxed && !self.is_builtin_type(&field);
+        #[cfg(feature = "lazypb")]
+        if is_lazy {
+            self.buf.push_str(", lazypb=\"");
+            self.buf.push_str(&ty);
+            self.buf.push_str("\"");
         }
 
         if boxed {
@@ -400,7 +424,7 @@ impl<'a> CodeGenerator<'a> {
         }
 
         #[cfg(feature = "lazypb")]
-        if type_ == Type::Message && !repeated {
+        if is_lazy {
             self.buf.push_str("::core::cell::RefCell<::lazypb::Lazy<");
         }
         if boxed {
@@ -411,7 +435,7 @@ impl<'a> CodeGenerator<'a> {
             self.buf.push('>');
         }
         #[cfg(feature = "lazypb")]
-        if type_ == Type::Message && !repeated {
+        if is_lazy {
             self.buf.push_str(">>");
         }
         if repeated || optional {
